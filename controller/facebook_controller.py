@@ -14,9 +14,15 @@ class FacebookController:
         self.driver.get(self.web_base_url)
     
 
-    def share_post(self):
+    def share_post(self , sex , video):
         # click on the share button
-        share_button_xpath = '//span[contains(text(), "שתף")]'
+        if(video == 1): #video post
+            share_button_xpath = '//div[@aria-label="שיתוף"]'
+        else: # text post
+            if(sex == 1): # male
+                share_button_xpath = '//span[contains(text(), "שתף")]'
+            else: # female
+                share_button_xpath = '//span[contains(text(), "שתפי")]'
         share_button = self.driver.find_element(By.XPATH, share_button_xpath)
         share_button.click()
         time.sleep(1.1)
@@ -36,13 +42,22 @@ class FacebookController:
                 group = group_div.find_elements(By.TAG_NAME, "i")
                 group[0].click()
                 time.sleep(uniform(1,2))
-                post_button_xpath = '//span[contains(text(), "פרסם")]'
+                if(sex==1): # male
+                    post_button_xpath = '//span[contains(text(), "פרסם")]'
+                else:
+                    post_button_xpath = '//span[contains(text(), "פרסמי")]'
                 post_button = self.driver.find_element(By.XPATH, post_button_xpath)
                 post_button.click()
                 time.sleep(uniform(5,7))
                 continue
             # all the process all over again.
-            share_button_xpath = '//span[contains(text(), "שתף")]'
+            if(video == 1): #video post
+                share_button_xpath = '//div[@aria-label="שיתוף"]'
+            else: # text post
+                if(sex == 1): # male
+                    share_button_xpath = '//span[contains(text(), "שתף")]'
+                else: # female
+                    share_button_xpath = '//span[contains(text(), "שתפי")]'
             share_button = self.driver.find_element(By.XPATH, share_button_xpath)
             share_button.click()
             time.sleep(1.1)
@@ -56,7 +71,11 @@ class FacebookController:
             group =  group_div.find_elements(By.TAG_NAME, "i")
             group[0].click()
             time.sleep(uniform(1,2))
-            post_button_xpath = '//span[contains(text(), "פרסם")]'
+            if(sex==1): # male
+                post_button_xpath = '//span[contains(text(), "פרסם")]'
+            else: # female
+                post_button_xpath = '//span[contains(text(), "פרסמי")]'
+
             post_button = self.driver.find_element(By.XPATH, post_button_xpath)
             post_button.click()
             time.sleep(uniform(5,7))
