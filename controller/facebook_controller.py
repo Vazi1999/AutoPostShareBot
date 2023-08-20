@@ -14,68 +14,66 @@ class FacebookController:
         self.driver.get(self.web_base_url)
     
 
-    def share_post(self , sex , video):
+    def scroll_groups(self):
+        groups_divs_xpath = '//span[contains(text(), "ציבורית")]'
+        js_code = "arguments[0].scrollIntoView();"
+        self.groups_count = -1
+        groups_divs = []
+        while self.groups_count != len(groups_divs):
+            self.groups_count = len(groups_divs)
+            groups_divs = self.driver.find_elements(By.XPATH, groups_divs_xpath)
+            element = groups_divs[-1]
+            js_code = "arguments[0].scrollIntoView();"
+            self.driver.execute_script(js_code, element)
+            time.sleep(uniform(4,5))
+        element = groups_divs[0]
+        self.driver.execute_script(js_code, element)
+        return groups_divs
+            
+
+    def share_post(self , video):
         # click on the share button
         if(video == 1): #video post
             share_button_xpath = '//div[@aria-label="שיתוף"]'
         else: # text post
-            if(sex == 1): # male
-                share_button_xpath = '//span[contains(text(), "שתף")]'
-            else: # female
-                share_button_xpath = '//span[contains(text(), "שתפי")]'
+            share_button_xpath = '/html/body/div[1]/div/div[1]/div/div[3]/div/div/div/div[1]/div[1]/div/div/div/div/div/div/div/div/div/div/div/div/div/div[2]/div/div/div[4]/div/div/div[1]/div/div[2]/div/div[3]/div/div[1]'
         share_button = self.driver.find_element(By.XPATH, share_button_xpath)
         share_button.click()
-        time.sleep(1.1)
+        time.sleep(uniform(1.1,1.5))
         # click on share to group button
         group_share_button_xpath = '//span[contains(text(), "שיתוף בקבוצה")]'
         group_share_button = self.driver.find_element(By.XPATH, group_share_button_xpath)
         group_share_button.click()
-        time.sleep(1.2)
-        #click on the group
-        groups_divs = self.driver.find_elements(By.CSS_SELECTOR, 'div[role="listitem"]') # all the groups
-        self.groups_count = len(groups_divs)
+        time.sleep(uniform(1.1,1.5))
+        groups_divs = self.scroll_groups()
+        print(len(groups_divs))
         group_div = groups_divs[0] # the first group
-
         for i in range(0,self.groups_count,1):
             if i == 0:
                 # needs to continue from this starting point
-                group = group_div.find_elements(By.TAG_NAME, "i")
-                group[0].click()
-                time.sleep(uniform(1,2))
-                if(sex==1): # male
-                    post_button_xpath = '//span[contains(text(), "פרסם")]'
+                group_div.click()
+                time.sleep(uniform(1.1,1.5))
+                if(video == 0):
+                    post_button_xpath = '/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[1]/div/div[2]/div/div/div/div/div[2]/form/div/div[1]/div/div/div[1]/div/div[3]/div[3]/div/div/div'
                 else:
-                    post_button_xpath = '//span[contains(text(), "פרסמי")]'
+                    post_button_xpath = '/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[1]/div/div[2]/div/div/div/div/div[2]/form/div/div[1]/div/div/div[1]/div/div[3]/div[3]/div/div/div'
                 post_button = self.driver.find_element(By.XPATH, post_button_xpath)
                 post_button.click()
                 time.sleep(uniform(5,7))
                 continue
             # all the process all over again.
-            if(video == 1): #video post
-                share_button_xpath = '//div[@aria-label="שיתוף"]'
-            else: # text post
-                if(sex == 1): # male
-                    share_button_xpath = '//span[contains(text(), "שתף")]'
-                else: # female
-                    share_button_xpath = '//span[contains(text(), "שתפי")]'
             share_button = self.driver.find_element(By.XPATH, share_button_xpath)
             share_button.click()
-            time.sleep(1.1)
+            time.sleep(uniform(1.1,1.5))
             # click on share to group button
-            group_share_button_xpath = '//span[contains(text(), "שיתוף בקבוצה")]'
             group_share_button = self.driver.find_element(By.XPATH, group_share_button_xpath)
             group_share_button.click()
-            time.sleep(1.2)
+            time.sleep(uniform(1.1,1.5))
+            time.sleep(uniform(1.1,1.5))
+            groups_divs_xpath = '//span[contains(text(), "ציבורית")]'
+            group_div = self.driver.find_elements(By.XPATH, groups_divs_xpath)[i]
+            group_div.click()
             time.sleep(uniform(1,2))
-            group_div = self.driver.find_elements(By.CSS_SELECTOR, 'div[role="listitem"]')[i]
-            group =  group_div.find_elements(By.TAG_NAME, "i")
-            group[0].click()
-            time.sleep(uniform(1,2))
-            if(sex==1): # male
-                post_button_xpath = '//span[contains(text(), "פרסם")]'
-            else: # female
-                post_button_xpath = '//span[contains(text(), "פרסמי")]'
-
             post_button = self.driver.find_element(By.XPATH, post_button_xpath)
             post_button.click()
             time.sleep(uniform(5,7))

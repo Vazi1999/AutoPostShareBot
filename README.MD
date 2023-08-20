@@ -37,4 +37,4 @@ AutoPostShareBot is a Python script that automates the process of sharing a post
 **You need to configure where your chrome application is installed !**
 go to the project directory and then to deps.py file.
 go the following command : os.chdir(r'C:\Program Files\Google\Chrome\Application') .
-change the link to where you google chrome is installed.
+**change the link to where you google chrome is installed.**
